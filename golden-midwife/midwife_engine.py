@@ -19,10 +19,11 @@ def calculate_pregnancy_score(data):
 
     # Signal 1: Volume Swelling
     avg_vol = data['Volume'].rolling(window=10).mean()
-    vol_today = float(data['Volume'].iloc[-1])
-    avg_vol_10 = avg_vol.iloc[-1]
+    vol_today = data['Volume'].iloc[-1].item()
+    avg_vol_10 = avg_vol.iloc[-1].item()
+
     
-    if not pd.isna(avg_vol_10) and vol_today > float(avg_vol_10) * 1.5:
+    if not pd.isna(avg_vol_10) and vol_today > avg_vol_10 * 1.5:
         score += 1
         signals['volume_surge'] = True
 
@@ -32,19 +33,20 @@ def calculate_pregnancy_score(data):
     recent_volatility = data['daily_range'].rolling(window=5).mean()
     prior_volatility = data['daily_range'].rolling(window=20).mean()
     
-    vol_5 = recent_volatility.iloc[-1]
-    vol_20 = prior_volatility.iloc[-1]
+    vol_5 = recent_volatility.iloc[-1].item()
+    vol_20 = prior_volatility.iloc[-1].item()
     
-    if not pd.isna(vol_5) and not pd.isna(vol_20) and float(vol_5) < float(vol_20) * 0.75:
+    if not pd.isna(vol_5) and not pd.isna(vol_20) and vol_5 < vol_20 * 0.75:
         score += 1
         signals['volatility_squeeze'] = True
     
     # Signal 3: Price Hugging Resistance
     recent_high = data['Close'].rolling(window=20).max()
-    price_now = float(data['Close'].iloc[-1])
-    high_20 = recent_high.iloc[-1]
+    price_now = data['Close'].iloc[-1].item()
+    high_20 = recent_high.iloc[-1].item()
+
     
-    if not pd.isna(high_20) and price_now > float(high_20) * 0.95:
+    if not pd.isna(high_20) and price_now > high_20 * 0.95:
         score += 1
         signals['resistance_hug'] = True
 
